@@ -12,4 +12,4 @@ https://pypi.org/project/scrapy-user-agents/
 
 ## Usage
 
-scrapy crawl <name>
+scrapy crawl hackerrank
