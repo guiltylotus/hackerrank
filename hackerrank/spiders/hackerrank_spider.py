@@ -14,10 +14,11 @@ class HackerrankScraper(scrapy.Spider):
         datas = json.loads(response.text)["models"]
 
         for data in datas:
-            data_url = 'https://www.hackerrank.com/challenges/' + data['slug'] + '/problem'
+            data_url = 'https://www.hackerrank.com/challenges/' + \
+                data['slug'] + '/problem'
             yield {
                 'name': data["name"],
-                'url' : data_url
+                'url': data_url
             }
             yield scrapy.Request(url=data_url, callback=self.parseProblems)
 
@@ -26,8 +27,11 @@ class HackerrankScraper(scrapy.Spider):
             yield scrapy.Request(url=self.problems_api.format(self.offset), callback=self.parse)
 
     def parseProblems(self, response):
-        data = response.css(".hackdown-content").extract()
-        # print('_________', data)
+        data = response.css(
+            "div.challenge_problem_statement div.hackdown-content").css('p, ul').css('::text').extract()
+
+        problemStatement = ' '.join(data).replace('\n', '')
+        problemStatement = ' '.join(problemStatement.split())
         yield {
-            'problems': data
+            'problems': problemStatement
         }
