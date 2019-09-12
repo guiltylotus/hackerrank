@@ -2,14 +2,17 @@
 
 ## Install
 
-python : 3.7
+python : 3.5
 
 scrapy
 
 scrapy-user-agent
 
-https://pypi.org/project/scrapy-user-agents/
-
 ## Usage
 
 scrapy crawl hackerrank
+
+## Database
+
+Using https://sqliteonline.com/ , import myhackerrank.db to view database 
+
