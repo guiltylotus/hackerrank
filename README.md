@@ -23,7 +23,9 @@ top 100 Leader: https://www.hackerrank.com/challenges/<problem_name>/leaderboard
 ### Related file
 
 hackerrank.py   (1,2)
+
 items.py        (3)
+
 pipeline.py     (4)
 
 ## Database
