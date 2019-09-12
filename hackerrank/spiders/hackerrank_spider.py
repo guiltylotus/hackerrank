@@ -29,7 +29,7 @@ class HackerrankScraper(scrapy.Spider):
             yield items
 
             yield scrapy.Request(url=problem_url, callback=self.parseProblems, cb_kwargs=dict(problem_name=data["name"]))
-            # yield scrapy.Request(url=leader_board_url, callback=self.parseLeaderBoard, cb_kwargs=dict(problem_name=data["name"]))
+            yield scrapy.Request(url=leader_board_url, callback=self.parseLeaderBoard, cb_kwargs=dict(problem_name=data["name"]))
 
         if len(datas) > 0:
             self.offset = self.offset + 50
