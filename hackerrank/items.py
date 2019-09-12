@@ -14,17 +14,18 @@ class HackerrankItem(scrapy.Item):
     pass
 
 class ProblemList(scrapy.Item):
+    id = scrapy.Field()
     name = scrapy.Field()
-    url = scrapy.Field()
     success_ratio = scrapy.Field()
     max_score = scrapy.Field()
     difficulty_name = scrapy.Field()
 
 class ProblemDetail(scrapy.Item):
+    id = scrapy.Field()
     problem = scrapy.Field()
     sample_input = scrapy.Field()
     sample_output = scrapy.Field()
-    problem_name = scrapy.Field()
+    pl_id = scrapy.Field()
 
 class Leader(scrapy.Item):
     username = scrapy.Field()
