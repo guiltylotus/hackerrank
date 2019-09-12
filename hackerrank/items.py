@@ -28,6 +28,8 @@ class ProblemDetail(scrapy.Item):
     pl_id = scrapy.Field()
 
 class Leader(scrapy.Item):
+    id = scrapy.Field()
     username = scrapy.Field()
     rank = scrapy.Field()
     score = scrapy.Field()
+    pl_id = scrapy.Field()

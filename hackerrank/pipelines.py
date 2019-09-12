@@ -42,9 +42,12 @@ class HackerrankPipeline(object):
                         )""")
 
         self.curr.execute(""" create table leader(
+                        id integer primary key,
                         username text,
                         rank integer,
-                        score integer
+                        score integer,
+                        pl_id integer,
+                        FOREIGN KEY(pl_id) REFERENCES problemlist(id)
                         )""")
 
     def process_item(self, item, spider):
@@ -76,16 +79,18 @@ class HackerrankPipeline(object):
             item['problem'],
             item['sample_input'][0],
             item['sample_output'][0],
-            item['pl_id'][0]
+            item['pl_id']
         ))
 
         self.conn.commit()
 
     def store_leader(self, item):
-        self.curr.execute(""" insert into leader values (?,?,?)""", (
+        self.curr.execute(""" insert into leader values (?,?,?,?,?)""", (
+            item['id'][0],
             item['username'][0],
             item['rank'][0],
-            item['score'][0]
+            item['score'][0],
+            item['pl_id']
         ))
 
         self.conn.commit()
