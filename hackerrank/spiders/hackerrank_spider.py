@@ -24,7 +24,7 @@ class HackerrankScraper(scrapy.Spider):
                 'url': problem_url
             }
             yield scrapy.Request(url=problem_url, callback=self.parseProblems)
-            yield scrapy.Request(url=leader_board_url, callback=self.parseLeaderBoard)
+            yield scrapy.Request(url=leader_board_url, callback=self.parseLeaderBoard, cb_kwargs=dict(problem_name=data["name"]))
 
         if len(datas) > 0 and self.offset < 3:
             self.offset = self.offset + 2
@@ -55,7 +55,7 @@ class HackerrankScraper(scrapy.Spider):
             'problems': problemStatement
         }
 
-    def parseLeaderBoard(self, response):
+    def parseLeaderBoard(self, response, problem_name):
         datas = response.css('a[data-action="hacker-modal"]')
         for data in datas:
             username = data.css('::attr(username)').extract_first()
@@ -64,5 +64,6 @@ class HackerrankScraper(scrapy.Spider):
             yield {
                 'username': username,
                 'rank': rank,
-                'score': score
+                'score': score,
+                'data_name': problem_name
             }
