@@ -16,7 +16,7 @@ class HackerrankPipeline(object):
         self.create_table()
 
     def create_connection(self):
-        self.conn = sqlite3.connect("myhackerrank.db")
+        self.conn = sqlite3.connect('myhackerrank.db')
         self.curr = self.conn.cursor()
 
     def create_table(self):
