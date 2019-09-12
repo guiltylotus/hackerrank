@@ -14,13 +14,17 @@ class HackerrankScraper(scrapy.Spider):
         datas = json.loads(response.text)["models"]
 
         for data in datas:
-            data_url = 'https://www.hackerrank.com/challenges/' + \
+            problem_url = 'https://www.hackerrank.com/challenges/' + \
                 data['slug'] + '/problem'
+            leader_board_url = 'https://www.hackerrank.com/challenges/' + \
+                data['slug'] + '/leaderboard?limit=100&page=1'
+
             yield {
                 'name': data["name"],
-                'url': data_url
+                'url': problem_url
             }
-            yield scrapy.Request(url=data_url, callback=self.parseProblems)
+            yield scrapy.Request(url=problem_url, callback=self.parseProblems)
+            yield scrapy.Request(url=leader_board_url, callback=self.parseLeaderBoard)
 
         if len(datas) > 0 and self.offset < 3:
             self.offset = self.offset + 2
@@ -32,6 +36,33 @@ class HackerrankScraper(scrapy.Spider):
 
         problemStatement = ' '.join(data).replace('\n', '')
         problemStatement = ' '.join(problemStatement.split())
+
+        data = response.css(
+            "div.challenge_sample_input div.hackdown-content").css('pre').css('::text').extract()
+
+        inputStatement = ' '.join(data)
+        inputStatement = ' '.join(inputStatement.split())
+
+        data = response.css(
+            "div.challenge_sample_output div.hackdown-content").css('pre').css('::text').extract()
+
+        outputStatement = ' '.join(data)
+        outputStatement = ' '.join(inputStatement.split())
+
         yield {
+            'sample_input': inputStatement,
+            'sample_output': outputStatement,
             'problems': problemStatement
         }
+
+    def parseLeaderBoard(self, response):
+        datas = response.css('a[data-action="hacker-modal"]')
+        for data in datas:
+            username = data.css('::attr(username)').extract_first()
+            rank = data.css('::attr(data-attr8)').extract_first()
+            score = data.css('::attr(data-attr10)').extract_first()
+            yield {
+                'username': username,
+                'rank': rank,
+                'score': score
+            }
