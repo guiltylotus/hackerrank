@@ -1,6 +1,7 @@
 import json
 import scrapy
 from hackerrank.items import ProblemList, ProblemDetail, Leader
+import time
 
 class HackerrankScraper(scrapy.Spider):
     def __init__(self):
@@ -9,7 +10,7 @@ class HackerrankScraper(scrapy.Spider):
         self.countLeaders = 0
 
     name = 'hackerrank'
-    problems_api = "https://www.hackerrank.com/rest/contests/master/tracks/algorithms/challenges?offset={}&limit=10&track_login=true"
+    problems_api = "https://www.hackerrank.com/rest/contests/master/tracks/algorithms/challenges?offset={}&limit=50&track_login=true"
     start_urls = [problems_api.format(0)]
 
     def parse(self, response):
@@ -28,13 +29,13 @@ class HackerrankScraper(scrapy.Spider):
             items['max_score'] = data["max_score"]
             items['difficulty_name'] = data["difficulty_name"]
 
-            # yield items
+            yield items
 
             yield scrapy.Request(url=problem_url, callback=self.parseProblems, cb_kwargs=dict(pl_id=data["id"]))
             yield scrapy.Request(url=leader_board_url, callback=self.parseLeaderBoard, cb_kwargs=dict(pl_id=data["id"]))
 
-        if len(datas) > 0 :
-            self.offset = self.offset + 10
+        if len(datas) > 0:
+            self.offset = self.offset + 50
             yield scrapy.Request(url=self.problems_api.format(self.offset), callback=self.parse)
 
     def parseProblems(self, response, pl_id):
@@ -65,7 +66,7 @@ class HackerrankScraper(scrapy.Spider):
         items['problem'] = problemStatement
         items['pl_id'] = pl_id
 
-        # yield items
+        yield items
 
     def parseLeaderBoard(self, response, pl_id):
         items = Leader()
@@ -83,4 +84,4 @@ class HackerrankScraper(scrapy.Spider):
             items['score'] = score,
             items['pl_id'] = pl_id
 
-            # yield items
+            yield items
