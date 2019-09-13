@@ -8,6 +8,8 @@ scrapy
 
 scrapy-user-agent
 
+sqlite3
+
 ## Usage
 
 scrapy crawl hackerrank
