@@ -11,7 +11,7 @@ class HackerrankScraper(scrapy.Spider):
         self.count_leaders = 0
 
     name = 'hackerrank'
-    problems_api = 'https://www.hackerrank.com/rest/contests/master/tracks/algorithms/challenges?offset={}&limit=50&track_login=true'
+    problems_api = 'https://www.hackerrank.com/rest/contests/master/tracks/algorithms/challenges?offset={}&limit=10&track_login=true'
     start_urls = [problems_api.format(0)]
 
     def parse(self, response):
@@ -36,7 +36,7 @@ class HackerrankScraper(scrapy.Spider):
             yield scrapy.Request(url=leader_board_url, callback=self.parse_leader_board, cb_kwargs=dict(pl_id=data['id']))
 
         if len(datas) > 0:
-            self.offset = self.offset + 50
+            self.offset = self.offset + 10
             yield scrapy.Request(url=self.problems_api.format(self.offset), callback=self.parse)
 
     def parse_problems(self, response, pl_id):
@@ -44,7 +44,7 @@ class HackerrankScraper(scrapy.Spider):
 
         self.count_problems += 1
         data = response.css(
-            'div.challenge_problem_statement div.hackdown-content').css('p, ul').css('::text').extract()
+            'div.challenge_problem_statement div.hackdown-content').css('p, ul, pre').css('::text').extract()
 
         problem_statement = ' '.join(data).replace('\n', '')
         problem_statement = ' '.join(problem_statement.split())
